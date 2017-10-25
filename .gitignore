@@ -80,3 +80,4 @@ CMakeLists.txt.user
 
 cmake-build-debug/
 cmake-build-release/
+Docs/html/

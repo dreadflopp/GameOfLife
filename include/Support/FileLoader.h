@@ -33,7 +33,6 @@ public:
      * @param cells is given as in-data and is populated with cells and returned by reference.
      * @throws throws an error if the file is not found
      * @test that an error is thrown if the file is missing and the file argument is set
-     * @test testing that a file is loaded correctly. Check that WORLD_DIMENSIONS are correct.
      * @test that cells is a copy of the cell structure in the file is done in the tests of Population::initiatePopulation
      */
     void loadPopulationFromFile(map<Point, Cell>& cells);

@@ -13,16 +13,16 @@ using namespace std;
 // Prints the population to screen
 void ScreenPrinter::printBoard(Population& population) {
 
-    // TODO change to dimension
-    int windowHeight = WORLD_DIMENSIONS.HEIGHT + 1;
-    int windowWidth = WORLD_DIMENSIONS.WIDTH + 1;
+    Dimensions windowDimensions;
+    windowDimensions.HEIGHT = WORLD_DIMENSIONS.HEIGHT + 1;
+    windowDimensions.WIDTH = WORLD_DIMENSIONS.WIDTH + 1;
 
     terminal.showCursor(false);	// hide cursor
 
     // Each row
-    for (int row = 0; row <= windowHeight; row++) {
+    for (int row = 0; row <= windowDimensions.HEIGHT; row++) {
         // Each column
-        for (int column = 0; column <= windowWidth; column++) {
+        for (int column = 0; column <= windowDimensions.WIDTH; column++) {
             // Get cell att position [column,row]
             Cell cell = population.getCellAtPosition(Point{column, row});
 

@@ -1,8 +1,9 @@
-/*
- * Filename    Globals.h
- * Author      Erik Ström
- * Date        October 2017
- * Version     0.1
+/**
+ * @file Globals.h
+ * @author Mattias Lindell
+ * @author Andreas Lind
+ * @date October 2017
+ * @version 0.1
 */
 
 #ifndef GLOBALS_H
@@ -13,10 +14,17 @@
 
 using namespace std;
 
-// The actual width and height of the used world
+
+/**
+ * @brief World dimensions
+ * @details A global variable containing the world dimensions,
+ * the actual width and height of the used world
+ */
 extern Dimensions WORLD_DIMENSIONS;
 
-// Name of file to read
+/**
+ * @brief A global variable set to the name of the file to read
+ */
 extern string fileName;
 
 

@@ -16,7 +16,7 @@
 #include "Cell_Culture/Population.h"
 
 /**
- * @class
+ * @class ScreenPrinter
  * @brief Responsible for visually representing the simulation world on screen.
  * @details The class constructor is private. This is a singleton class that
  * visually represents the simulated world on the screen.

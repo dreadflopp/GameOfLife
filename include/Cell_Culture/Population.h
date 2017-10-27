@@ -1,8 +1,8 @@
 /*
- * Filename    Population.h
- * Author      Erik Ström
- * Date        October 2017
- * Version     0.1
+ * @file Population.h
+ * @author Andreas Lind
+ * @version 0.1
+ * @date 2017-10-27
 */
 
 #ifndef POPULATION_H
@@ -56,7 +56,8 @@ public:
      *  @param evenRuleName represents rules to be applied to every even numbered generation of cells
      *  @param oddRuleName represents rules to be applied to every odd numbered generation of cells. If left empty,
      *  same rule as evenRuleName will be applied
-     *  @test that nr of cells in the simulation world is equal to height * width
+     *  @test that if randomized, test that stored cells are a copy of randomized cell values
+     *  @test that if read from file, test that stored cells are a copy of the cell structure in the file
      */
     void initiatePopulation(string evenRuleName, string oddRuleName = "");
 

@@ -1,8 +1,9 @@
-/*
- * Filename    Cell.h
- * Author      Erik Ström
- * Date        October 2017
- * Version     0.1
+/**
+ * @file Cell.h
+ * @author Mattias Lindell
+ * @author Andreas Lind
+ * @date October 2017
+ * @version 0.1
 */
 
 #ifndef cellH

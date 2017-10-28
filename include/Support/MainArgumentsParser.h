@@ -28,7 +28,7 @@ public:
      * @param argv represents all arguments provided by the user
      * @param length represents nr of arguments
      * @return reference to ApplicationValues object
-     * @test that all appValues are set as expected
+     * @test that appValues are set as expected
      */
     ApplicationValues& runParser(char* argv[], int length);
 

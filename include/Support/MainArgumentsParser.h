@@ -44,7 +44,13 @@ private:
      */
     bool optionExists(char** begin, char** end, const std::string& option);
 
-    // gets the given option value
+    /**
+     * @brief gets the given option value
+     * @param begin represents starting point of list of provided arguments
+     * @param end represents end point of list of provided arguments
+     * @param option represents value to find in provided arguments
+     * @return pointer to value to be set in appValues
+     */
     char* getOption(char** begin, char** end, const std::string& option);
 };
 

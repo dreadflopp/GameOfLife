@@ -29,7 +29,7 @@ private:
 public:
     /**
      *  @brief Constructor that initializes GameOfLife object with max nr of generations and rules for simulation
-     *  @param nrOfGenerations represents nr of genererations the simulation should iterate over before application ends. Default = 500
+     *  @param nrOfGenerations represents nr of genererations the simulation should iterate over before application ends. Default = 100
      *  @param evenRuleName represents rules to be applied to every even numbered generation of cells. Default = 'Conway'
      *  @param oddRuleName represents rules to be applied to every odd numbered generation of cells. Default = evenRuleName
      *  @test that data members are correctly set with different set of inputs

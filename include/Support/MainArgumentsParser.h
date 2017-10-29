@@ -37,8 +37,10 @@ public:
 private:
     ApplicationValues appValues;
 
+    // Checks if a given option exists
     bool optionExists(char** begin, char** end, const std::string& option);
-
+    
+    // gets the given option value
     char* getOption(char** begin, char** end, const std::string& option);
 };
 

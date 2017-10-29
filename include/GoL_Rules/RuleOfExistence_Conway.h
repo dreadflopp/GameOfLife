@@ -32,6 +32,7 @@ public:
 
     /**
      * @brief Execute the rule specific for Conway.
+     * @test that RuleOfExistance::countAliveNeighbours() returns a value that is correct
      * @test that rim cells are ignored
      * @test that if alive neighbours < 2, next ACTION is KILL_CELL and next color is DEAD.
      * @test that if alive neighbours > 3, next ACTION is KILL_CELL and next color is DEAD.

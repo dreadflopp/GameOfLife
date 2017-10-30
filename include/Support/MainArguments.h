@@ -125,7 +125,6 @@ public:
      * @param appValues The struct with the current appValues. Returned by reference.
      * @param dimensions the world dimensions in the form [n]x[n] where n is an integer
      * @test that appValues.runSimulation == false if the parameter dimensions is not set.
-     * @test that appValues.runSimulation == false if the parameter dimensions is given in a wrong format
      * @test the WORLD_DIMENSIONS is set correctly if the function has been succesfully executed
      */
     void execute(ApplicationValues& appValues, char* dimensions);

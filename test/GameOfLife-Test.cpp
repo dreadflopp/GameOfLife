@@ -8,6 +8,7 @@
 #include <random>
 #include <Support/SupportStructures.h>
 #include <GoL_Rules/RuleFactory.h>
+#include <Support/MainArguments.h>
 #include <Support/MainArgumentsParser.h>
 #include "catch.hpp"
 #include "memstat.hpp"
@@ -176,6 +177,142 @@ SCENARIO("Before creating RuleFactory object") {
                     }
                 }
                 delete testRule; //manually deallocate RuleOfExistance object since they are deallocated in Population-destructor in real simulation
+            }
+        }
+    }
+}
+
+/*
+ * Testing BaseArguments and its derived clases
+ */
+SCENARIO("Testing the class HelpArgument") {
+    GIVEN("A HelpArgument object and an ApplicationValues struct where runSimulation is set to true") {
+        HelpArgument helpArg;
+        ApplicationValues appValues;
+        appValues.runSimulation = true;
+        char* ch;
+
+        WHEN("The class is executed") {
+            helpArg.execute(appValues, ch);
+            THEN("appValues.runSimulation should be false") {
+                REQUIRE(appValues.runSimulation == false);
+            }
+        }
+    }
+}
+
+SCENARIO("Testing GenerationsArgument") {
+    GIVEN("A GenerationsArgument object and an ApplicationValues struct where runSimulation is set to true") {
+        GenerationsArgument genArg;
+        ApplicationValues appValues;
+        appValues.runSimulation = true;
+
+        WHEN("The object is executed when generations is not set") {
+            char* generations=nullptr;
+            genArg.execute(appValues, generations);
+            THEN("appValues.runSimulation should be false") {
+                REQUIRE(appValues.runSimulation == false);
+            }
+            AND_WHEN("the object is executed again with generations set to a value") {
+                generations = "97";
+                genArg.execute(appValues, generations);
+                THEN("appValues.maxGenerations should be set") {
+                    REQUIRE(appValues.maxGenerations == 97);
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Testing the class WorldSizeArgument") {
+    GIVEN("A class object and an ApplicationValues struct") {
+        WorldsizeArgument worldArg;
+        ApplicationValues appValues;
+        appValues.runSimulation = true;
+
+        WHEN("The object is executed and dimensions is not set") {
+            char* dimensions=nullptr;
+            worldArg.execute(appValues, dimensions);
+            THEN("appValues.runSimulation should be false") {
+                REQUIRE(appValues.runSimulation == false);
+            }
+            AND_WHEN("executing the with dimensions is set to a valid value") {
+                dimensions = "79x34";
+                worldArg.execute(appValues, dimensions);
+                THEN("the WORLD_DIMENSIONS should be 79x34") {
+
+                    REQUIRE(WORLD_DIMENSIONS.HEIGHT == 34);
+                    REQUIRE(WORLD_DIMENSIONS.WIDTH == 79);
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Testing FileArgument") {
+    GIVEN("A FileArgument object and an ApplicationValues struct where runSimulation is set to true") {
+        FileArgument fileArg;
+        ApplicationValues appValues;
+        appValues.runSimulation = true;
+
+        WHEN("The object is executed when fileNameArg is not set") {
+            char* fileNameArg=nullptr;
+            fileArg.execute(appValues, fileNameArg);
+            THEN("appValues.runSimulation should be false") {
+                REQUIRE(appValues.runSimulation == false);
+            }
+            AND_WHEN("the object is executed again with fileNameArg set to a value") {
+                fileNameArg = "testName";
+                fileArg.execute(appValues, fileNameArg);
+                THEN("the global variable FileName should be equal to fileNameArg") {
+                    REQUIRE(fileName == fileNameArg);
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Testing EvenRuleArgument") {
+    GIVEN("An EvenRuleArgument object and an ApplicationValues struct where runSimulation is set to true") {
+        EvenRuleArgument evenArg;
+        ApplicationValues appValues;
+        appValues.runSimulation = true;
+
+        WHEN("The object is executed when argument is not set") {
+            char* argument=nullptr;
+            evenArg.execute(appValues, argument);
+            THEN("appValues.runSimulation should be false") {
+                REQUIRE(appValues.runSimulation == false);
+            }
+            AND_WHEN("the object is executed again with argument set to a value") {
+                argument = "testName";
+                evenArg.execute(appValues, argument);
+                THEN("appValues.evenRuleName  should be equal to argument") {
+                    REQUIRE(appValues.evenRuleName == argument);
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Testing OddRuleArgument") {
+    GIVEN("An OddRuleArgument object and an ApplicationValues struct where runSimulation is set to true") {
+        OddRuleArgument oddArg;
+        ApplicationValues appValues;
+        appValues.runSimulation = true;
+
+        WHEN("The object is executed when argument is not set") {
+            char* argument=nullptr;
+            oddArg.execute(appValues, argument);
+            THEN("appValues.runSimulation should be false") {
+                REQUIRE(appValues.runSimulation == false);
+            }
+            AND_WHEN("the object is executed again with argument set to a value") {
+                argument = "testName";
+                oddArg.execute(appValues, argument);
+                THEN("appValues.evenRuleName  should be equal to argument") {
+                    REQUIRE(appValues.oddRuleName == argument);
+                }
             }
         }
     }

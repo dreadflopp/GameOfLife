@@ -8,9 +8,87 @@
 #include <random>
 #include <Support/SupportStructures.h>
 #include <GoL_Rules/RuleFactory.h>
+#include <Support/MainArgumentsParser.h>
 #include "catch.hpp"
 #include "memstat.hpp"
 #include "GoL_Rules/RuleOfExistence.h"
+
+
+/*
+ * TESTING class MainArgumentsParser
+ */
+SCENARIO("Testing MainArgumentsParser with default values") {
+    GIVEN("MainArgumentsParser object") {
+        MainArgumentsParser parser;
+
+        WHEN("Given no input values"){
+            char *argv[] = {"GameOfLife"};
+            int argc = 1;
+            ApplicationValues appValues = parser.runParser(argv, argc);
+            THEN("runSimulation should be true") {
+                REQUIRE(appValues.runSimulation == true);
+                AND_THEN("maxGenerations should be set to default '100'") {
+                    REQUIRE(appValues.maxGenerations == 100);
+                }
+                AND_THEN("evenRuleName should be set to default 'conway'") {
+                    REQUIRE(appValues.evenRuleName == "conway");
+                }
+                AND_THEN("oddRuleName should copy evenRuleName") {
+                    REQUIRE(appValues.oddRuleName == appValues.evenRuleName);
+                }
+                AND_THEN("WORLD_DIMENSIONS should be set to default 80x24") {
+                    REQUIRE(WORLD_DIMENSIONS.WIDTH == 80);
+                    REQUIRE(WORLD_DIMENSIONS.HEIGHT == 24);
+                }
+            }
+        }
+    }
+}
+SCENARIO("Testing MainArgumentsParser with all possible parameters"){
+    GIVEN("MainArgumentsParser object") {
+        MainArgumentsParser parser;
+
+        WHEN("Given valid set of input values to set WORLD_DIMENSIONS, evenRuleName, oddRuleName, generations, filename") {
+            char *argv[] = {"GameOfLife", "-s", "160x24", "-er", "erik", "-or", "von_neumann", "-g", "500", "-f", "population.txt"};
+            int argc = 11;
+            ApplicationValues appValues = parser.runParser(argv, argc);
+            THEN("runSimulation should be true") {
+                REQUIRE(appValues.runSimulation == true);
+                AND_THEN("MaxGenerations should be set to '500'") {
+                    REQUIRE(appValues.maxGenerations == 500);
+                }
+                AND_THEN("evenRuleName should be set to 'erik'") {
+                    REQUIRE(appValues.evenRuleName == "erik");
+                }
+                AND_THEN("evenRuleName should be set to 'von_neumann'") {
+                    REQUIRE(appValues.oddRuleName == "von_neumann");
+                }
+                AND_THEN("global fileName should be set to 'population.txt'") {
+                REQUIRE(fileName == "population.txt");
+                }
+                AND_THEN("WORLD_DIMENSIONS should be set to '160x24'") {
+                    REQUIRE(WORLD_DIMENSIONS.WIDTH == 160);
+                    REQUIRE(WORLD_DIMENSIONS.HEIGHT == 24);
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Testing MainArgumentsParser with missing value") {
+    GIVEN("MainArgumentsParser object") {
+        MainArgumentsParser parser;
+
+        WHEN("Given indicator '-g' to set generations but no value"){
+            char *argv[] = {"GameOfLife", "-g"};
+            int argc = 2;
+            ApplicationValues appValues = parser.runParser(argv, argc);
+            THEN("simulation should close") {
+                REQUIRE(appValues.runSimulation == false);
+            }
+        }
+    }
+}
 
 /*
  * Testing the struct Point
@@ -102,3 +180,4 @@ SCENARIO("Before creating RuleFactory object") {
         }
     }
 }
+

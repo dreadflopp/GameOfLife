@@ -10,6 +10,7 @@
 #include <GoL_Rules/RuleFactory.h>
 #include <Support/MainArguments.h>
 #include <Support/MainArgumentsParser.h>
+#include <Support/FileLoader.h>
 #include "catch.hpp"
 #include "memstat.hpp"
 #include "GoL_Rules/RuleOfExistence.h"
@@ -318,3 +319,22 @@ SCENARIO("Testing OddRuleArgument") {
     }
 }
 
+/*
+ * Testing FileLoader
+ */
+SCENARIO("Testing that a missing file throws an error") {
+    GIVEN("A FileLoader object and a map of cells to load into") {
+        FileLoader fileLoader;
+        map<Point, Cell> cells;
+        WHEN("The file doesn't exist") {
+            // Pretty random string
+            std::string prettyRandom = "olauhgfal£@$€ouirhjfgliSDRjhp3wsdf29845u6tp";
+            std::random_shuffle(prettyRandom.begin(), prettyRandom.end());
+
+            fileName = prettyRandom;
+            THEN("Loading the file should throw an error") {
+                REQUIRE_THROWS(fileLoader.loadPopulationFromFile(cells));
+            }
+        }
+    }
+}

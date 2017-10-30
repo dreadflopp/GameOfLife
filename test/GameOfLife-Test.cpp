@@ -26,9 +26,10 @@ SCENARIO("Before creating RuleFactory object") {
         }
         WHEN("Rulefactory object is created and rules are created") {
             map<Point, Cell> cells;
-            vector<string> testStrings = {"erik", "von_neumann", "andreas", "mattias", ""};
+            vector<string> testStrings = {"erik", "von_neumann", "andreas", "mattias", ""}; //input different strings to test that predefined rules are applied as
+                                                                                            //well as undefined rules which will result in default rules
             for (auto e: testStrings) {
-                testRule = RuleFactory::getInstance().createAndReturnRule(cells, e);
+                testRule = RuleFactory::getInstance().createAndReturnRule(cells, e); //ruleFactory object is created and returned by reference when getInstance() is called
 
                 AND_WHEN("The rule is set to be Eriks rules") {
                     if (e == "erik") {
@@ -53,7 +54,7 @@ SCENARIO("Before creating RuleFactory object") {
                         }
                     }
                 }
-                delete testRule;
+                delete testRule; //manually deallocate RuleOfExistance object since they are deallocated in Population-destructor in real simulation
             }
         }
     }

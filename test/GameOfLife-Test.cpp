@@ -399,7 +399,6 @@ SCENARIO("Testing that the class Cell works as it should") {
                                 // Random char
                                 std::uniform_int_distribution<int> random_char(33, 126);
                                 char value = static_cast<char>(random_char(generator));
-                                std::cout << "CHAR: " << value << std::endl;
 
                                 // Assign random char
                                 cell.setNextCellValue(value);

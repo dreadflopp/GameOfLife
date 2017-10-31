@@ -172,12 +172,12 @@ public:
      * @brief Get the cells next color. Function added for help with testing
      * @return the color the cell will have in the next generation
      */
-    COLOR getNextColor() { return nextUpdate.nextColor; }
+    COLOR getNextColor() const { return nextUpdate.nextColor; }
     /**
      * @brief Get the cells next value. Function added for help with testing
      * @return the value the cell will have in the next generation
      */
-    char getNextCellValue() { return nextUpdate.nextValue; }
+    char getNextCellValue() const { return nextUpdate.nextValue; }
 };
 
 #endif

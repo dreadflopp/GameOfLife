@@ -10,6 +10,8 @@
 #include <GoL_Rules/RuleFactory.h>
 #include <Support/MainArguments.h>
 #include <Support/MainArgumentsParser.h>
+#include <Cell_Culture/Cell.h>
+#include <vector>
 #include "catch.hpp"
 #include "memstat.hpp"
 #include "GoL_Rules/RuleOfExistence.h"
@@ -312,6 +314,138 @@ SCENARIO("Testing OddRuleArgument") {
                 oddArg.execute(appValues, argument);
                 THEN("appValues.evenRuleName  should be equal to argument") {
                     REQUIRE(appValues.oddRuleName == argument);
+                }
+            }
+        }
+    }
+}
+
+/*
+ * Tests for Cell
+ */
+
+SCENARIO("Testing that the class Cell works as it should") {
+    GIVEN("A dead cell that is not a rim cell") {
+        Cell cell;
+        THEN("The cell should be dead") {
+            REQUIRE_FALSE(cell.isAlive());
+        }
+        THEN("The cells age should be 0") {
+            REQUIRE(cell.getAge() == 0);
+        }
+        THEN("The cell should not be a rim cell") {
+            REQUIRE_FALSE(cell.isRimCell());
+        }
+        THEN("The next action should be set to it's default") {
+            REQUIRE(cell.getNextGenerationAction() == DO_NOTHING);
+        }
+        WHEN("Giving the cell life") {
+            cell.setNextGenerationAction(GIVE_CELL_LIFE);
+            THEN("The next action should be correctly set to give the cell life") {
+                REQUIRE(cell.getNextGenerationAction() == GIVE_CELL_LIFE);
+            }
+            AND_WHEN("The cells state gets updated") {
+                cell.updateState();
+                THEN("The cell should be alive") {
+                    REQUIRE(cell.isAlive());
+                }
+                THEN("The cell should have the age 1") {
+                    REQUIRE(cell.getAge() == 1);
+                }
+                THEN("The cell should not be a rim cell") {
+                    REQUIRE_FALSE(cell.isRimCell());
+                }
+                THEN("The next action should be reset") {
+                    REQUIRE(cell.getNextGenerationAction() == DO_NOTHING);
+                }
+                AND_WHEN("The cell action is set to be ignored") {
+                    cell.setNextGenerationAction(IGNORE_CELL);
+                    THEN("The next action should be set to be ignored") REQUIRE(
+                                cell.getNextGenerationAction() == IGNORE_CELL);
+                    AND_WHEN("The cell state gets update") {
+                        cell.updateState();
+                        THEN("The cells age should have been increased by 1") {
+                            REQUIRE(cell.getAge() == 2);
+                        }
+                        THEN("The cell should not be a rim cell") {
+                            REQUIRE_FALSE(cell.isRimCell());
+                        }
+                        THEN("The next action should be reset") {
+                            REQUIRE(cell.getNextGenerationAction() == DO_NOTHING);
+                        }
+                        AND_WHEN("Setting the color of the cell and updating") {
+                            // Random generator
+                            std::default_random_engine generator(static_cast<unsigned>(time(0)));
+                            std::uniform_int_distribution<int> random(0, 3);
+
+                            // A vector of colors
+                            vector<COLOR> colors = {STATE_COLORS.DEAD, STATE_COLORS.LIVING, STATE_COLORS.ELDER,
+                                                    STATE_COLORS.OLD};
+
+                            // Assign random color
+                            COLOR nextColor = colors.at(random(generator));
+                            cell.setNextColor(nextColor);
+                            cell.updateState();
+                            THEN("The color of the cell should be correctly set") {
+                                REQUIRE(cell.getColor() == nextColor);
+                            }
+                            THEN("The cells age should not have increased since the action was DO_NOTHING") {
+                                REQUIRE(cell.getAge() == 2);
+                            }
+                            THEN("The cell should not be a rim cell") {
+                                REQUIRE_FALSE(cell.isRimCell());
+                            }
+                            AND_WHEN("Setting the value of the cell and updating") {
+                                // Random char
+                                std::uniform_int_distribution<int> random_char(33, 126);
+                                char value = static_cast<char>(random_char(generator));
+                                std::cout << "CHAR: " << value << std::endl;
+
+                                // Assign random char
+                                cell.setNextCellValue(value);
+                                cell.updateState();
+                                THEN("The value of the cell should be correctly set") {
+                                    REQUIRE(cell.getCellValue() == value);
+                                }
+                                THEN("The cells age should not have increased since the action was DO_NOTHING") {
+                                    REQUIRE(cell.getAge() == 2);
+                                }
+                                THEN("The cell should not be a rim cell") {
+                                    REQUIRE_FALSE(cell.isRimCell());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        WHEN("Setting is alive next to true") {
+            cell.setIsAliveNext(true);
+            THEN("The cell should be set to be alive next") {
+                REQUIRE(cell.isAliveNext());
+            }
+            AND_WHEN("Setting is alive next to false") {
+                cell.setIsAliveNext(false);
+                THEN("The cell should not be set to be alive next") {
+                    REQUIRE_FALSE(cell.isAliveNext());
+                }
+            }
+        }
+    }
+    GIVEN("A rim cell") {
+        Cell cellRim(true);
+        WHEN("Giving the cell life") {
+            cellRim.setNextGenerationAction(GIVE_CELL_LIFE);
+            THEN("The cell should NOT be set to come alive, since it is a rim cell") {
+                REQUIRE(cellRim.getNextGenerationAction() == DO_NOTHING);
+            }
+            AND_WHEN("Updating the cell") {
+                cellRim.updateState();
+                THEN("The cell age should be 0 since it is a rim cell") {
+                    REQUIRE(cellRim.getAge() == 0);
+                }
+                THEN("The next action should be reset") {
+                    REQUIRE((cellRim.getNextGenerationAction() == DO_NOTHING));
                 }
             }
         }

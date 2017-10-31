@@ -91,7 +91,7 @@ public:
      * @test that a cell is killed if action is KILL_CELL. A dead cell has age == 0.
      * @test that age is increased by 1 if action is IGNORE_CELL.
      * @test that a cell with the action GIVE_CELL_LIFE gets age == 1 if it is not a rim cell.
-     * @test that a cell with the action GIVE_CELL_LIFE gets age == 0 if it is not a rim cell.
+     * @test that a cell with the action GIVE_CELL_LIFE gets age == 0 if it is a rim cell.
      */
     void updateState();
 

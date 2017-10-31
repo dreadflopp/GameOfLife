@@ -10,6 +10,7 @@
 #include <GoL_Rules/RuleFactory.h>
 #include <Support/MainArguments.h>
 #include <Support/MainArgumentsParser.h>
+#include <Support/FileLoader.h>
 #include <Cell_Culture/Cell.h>
 #include <vector>
 #include "catch.hpp"
@@ -111,28 +112,31 @@ SCENARIO ("Testing the overloading of operator < in the struct Point") {
         WHEN("The x value of point a is less than the x value of point b") {
             if (ax < bx)
                 THEN("point a should be less than point b") {
-                    REQUIRE( a<b );
+                    REQUIRE(a < b);
                 }
         }
         WHEN("The x value of point a is more than the x value of point b") {
             if (ax > bx)
                 THEN("point b should be less than point a") {
-                    REQUIRE( b<a );
+                    REQUIRE(b < a);
                 }
         }
         WHEN("The x value of point a is equal to the x value of point b") {
-            if (ax == bx)
+            if (ax == bx) {
                 AND_WHEN("The y value of point a is less than the y value of point b") {
-                    if (ay < by)
+                    if (ay < by) {
                         THEN("point a should be less than point b") {
-                            REQUIRE( a<b );
+                            REQUIRE(a < b);
                         }
+                    }
                 }
                 AND_WHEN("The y value of point a is more than the y value of point b") {
-                    if (ay > by)
+                    if (ay > by) {
                         THEN("point b should be less than point a") {
-                            REQUIRE( b<a );
+                            REQUIRE(b < a);
+                        }
                     }
+                }
             }
         }
     }
@@ -464,3 +468,22 @@ SCENARIO("Testing that the class Cell works as it should") {
     }
 }
 
+/*
+ * Testing FileLoader
+ */
+SCENARIO("Testing that a missing file throws an error") {
+    GIVEN("A FileLoader object and a map of cells to load into") {
+        FileLoader fileLoader;
+        map<Point, Cell> cells;
+        WHEN("The file doesn't exist") {
+            // Pretty random string
+            std::string prettyRandom = "olauhgfal£@$€ouirhjfgliSDRjhp3wsdf29845u6tp";
+            std::random_shuffle(prettyRandom.begin(), prettyRandom.end());
+
+            fileName = prettyRandom;
+            THEN("Loading the file should throw an error") {
+                REQUIRE_THROWS(fileLoader.loadPopulationFromFile(cells));
+            }
+        }
+    }
+}

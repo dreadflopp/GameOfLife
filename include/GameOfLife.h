@@ -32,13 +32,11 @@ public:
      *  @param nrOfGenerations represents nr of genererations the simulation should iterate over before application ends. Default = 100
      *  @param evenRuleName represents rules to be applied to every even numbered generation of cells. Default = 'Conway'
      *  @param oddRuleName represents rules to be applied to every odd numbered generation of cells. Default = evenRuleName
-     *  @test that data members are correctly set with different set of inputs
      */
     GameOfLife(int nrOfGenerations, string evenRuleName, string oddRuleName);
      /**
      *  @brief initiates the simulation and prints the first generation of cells and then continues to print the next
      *  generation until the maximum number of generations has been reached
-     *  @test that correct nr of generations are printed out
      */
     void runSimulation();
 

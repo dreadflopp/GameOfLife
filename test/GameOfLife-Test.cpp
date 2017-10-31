@@ -109,28 +109,31 @@ SCENARIO ("Testing the overloading of operator < in the struct Point") {
         WHEN("The x value of point a is less than the x value of point b") {
             if (ax < bx)
                 THEN("point a should be less than point b") {
-                    REQUIRE( a<b );
+                    REQUIRE(a < b);
                 }
         }
         WHEN("The x value of point a is more than the x value of point b") {
             if (ax > bx)
                 THEN("point b should be less than point a") {
-                    REQUIRE( b<a );
+                    REQUIRE(b < a);
                 }
         }
         WHEN("The x value of point a is equal to the x value of point b") {
-            if (ax == bx)
+            if (ax == bx) {
                 AND_WHEN("The y value of point a is less than the y value of point b") {
-                    if (ay < by)
+                    if (ay < by) {
                         THEN("point a should be less than point b") {
-                            REQUIRE( a<b );
+                            REQUIRE(a < b);
                         }
+                    }
                 }
                 AND_WHEN("The y value of point a is more than the y value of point b") {
-                    if (ay > by)
+                    if (ay > by) {
                         THEN("point b should be less than point a") {
-                            REQUIRE( b<a );
+                            REQUIRE(b < a);
+                        }
                     }
+                }
             }
         }
     }

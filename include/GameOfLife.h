@@ -40,6 +40,17 @@ public:
      */
     void runSimulation();
 
+    /**
+     * @brief Returns a population object. Function added for help with testing.
+     * @return reference to population
+     */
+    Population& getPopulation() {return population;}
+
+    /**
+     * @brief Return max nr of generations the simulation should iterate over. Function added for help with testing.
+     * @return nrOfGenerations
+     */
+    int getNrOfGenerations() {return nrOfGenerations;}
 };
 
 #endif

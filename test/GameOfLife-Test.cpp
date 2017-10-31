@@ -12,8 +12,91 @@
 #include "catch.hpp"
 #include "memstat.hpp"
 #include "GoL_Rules/RuleOfExistence.h"
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <GameOfLife.h>
 
+/*
+ * TESTING class Population
+ */
+SCENARIO("Testing a Population object") {
+    GIVEN("A Population object") {
+        Population myPopulation;
+        WHEN("Population object is created") {
+            THEN("Population should be empty") {
+                REQUIRE(myPopulation.getTotalCellPopulation() == 0);
+            }
 
+            // Random generator
+            std::default_random_engine generator(static_cast<unsigned>(time(0)));
+            std::uniform_int_distribution<int> random(1, 999999);
+
+            // Randomize rules
+            vector<string> allRules = {"conway", "erik", "von_neumann"};
+
+            string evenRuleName;
+            evenRuleName = allRules.at(random(generator) % 3);
+            string oddRuleName;
+            oddRuleName = allRules.at(random(generator) % 3);
+
+            AND_WHEN("Population is initiated with randomly created cells and randomly chosen valid rulenames") {
+                myPopulation.initiatePopulation(evenRuleName, oddRuleName);
+
+                THEN("data member evenRuleOfExistance should be evenRuleName") {
+                    REQUIRE(myPopulation.getEvenRuleName() == evenRuleName);
+                }
+                THEN("data member oddRuleOfExistance should be oddRuleName") {
+                    REQUIRE(myPopulation.getOddRuleName() == oddRuleName);
+                }
+                THEN("Population should not be empty") {
+                    REQUIRE(myPopulation.getTotalCellPopulation() > 0);
+                }
+                AND_WHEN("when calculateNewGeneration is run"){
+                    int testGen = 0;
+                    testGen = myPopulation.calculateNewGeneration();
+                    THEN("generation is incremented by 1") {
+                        REQUIRE(testGen == 1);
+                    }
+                }
+            }
+        }
+    }
+}
+/* UNFINISHED TEST
+SCENARIO("Testing that if Population is read from file, stored cells in Population are a copy of the cell structure in the file"){
+    GIVEN("Population created from file and a local copy for cell comparison"){
+        fileName = "Population_Seed.txt";
+        Population myPopulation;
+        myPopulation.initiatePopulation("erik", "von_neumann");
+
+        ifstream inFile(fileName);
+        string worldSize;
+        getline(inFile, worldSize);
+
+        int width = 0, height = 0;
+        istringstream iss(worldSize);
+        iss >> width;
+        iss.get();
+        iss >> height;
+        iss.clear();
+
+        vector<char> testCells;
+
+        for (int row = 0; row < height; row++) {
+            string populationRow;
+            getline(inFile, populationRow);
+            iss.str(populationRow);
+
+            for (int column = 0; column < width; column++) {
+                testCells.push_back(iss.get());
+                iss.clear();
+            }
+        }
+        inFile.close();
+    }
+}
+*/
 /*
  * TESTING class MainArgumentsParser
  */

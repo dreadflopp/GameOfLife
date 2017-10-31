@@ -84,8 +84,23 @@ public:
      */
     int getTotalCellPopulation() { return cells.size(); }
 
-    string getEvenRuleName() {return evenRuleOfExistence->getRuleName();}
-    string getOddRuleName() {return oddRuleOfExistence->getRuleName();}
+    /**
+     * @brief Gets rulename for even numbered generations. Function added for helt with testing.
+     * @return rulename for every even numbered generation
+     */
+    string getEvenRuleName() const {return evenRuleOfExistence->getRuleName();}
+
+    /**
+     * @brief Gets rulename for odd numbered generations. Function added for helt with testing.
+     * @return rulename for every odd numbered generation
+     */
+    string getOddRuleName() const {return oddRuleOfExistence->getRuleName();}
+
+    /**
+     * @brief Return copy of cells. Function added for helt with testing.
+     * @return cells representing entire society of cells
+     */
+    map<Point, Cell> getCells() const {return cells;};
 
 };
 

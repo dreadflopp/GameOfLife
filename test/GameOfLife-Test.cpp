@@ -27,20 +27,18 @@ SCENARIO("Testing a Population object") {
             THEN("Population should be empty") {
                 REQUIRE(myPopulation.getTotalCellPopulation() == 0);
             }
-
-            // Random generator
-            std::default_random_engine generator(static_cast<unsigned>(time(0)));
-            std::uniform_int_distribution<int> random(1, 999999);
-
-            // Randomize rules
-            vector<string> allRules = {"conway", "erik", "von_neumann"};
-
-            string evenRuleName;
-            evenRuleName = allRules.at(random(generator) % 3);
-            string oddRuleName;
-            oddRuleName = allRules.at(random(generator) % 3);
-
             AND_WHEN("Population is initiated with randomly created cells and randomly chosen valid rulenames") {
+                // Random generator
+                std::default_random_engine generator(static_cast<unsigned>(time(0)));
+                std::uniform_int_distribution<int> random(1, 999999);
+
+                // Randomize rules
+                vector<string> allRules = {"conway", "erik", "von_neumann"};
+
+                string evenRuleName;
+                evenRuleName = allRules.at(random(generator) % 3);
+                string oddRuleName;
+                oddRuleName = allRules.at(random(generator) % 3);
                 myPopulation.initiatePopulation(evenRuleName, oddRuleName);
 
                 THEN("data member evenRuleOfExistance should be evenRuleName") {

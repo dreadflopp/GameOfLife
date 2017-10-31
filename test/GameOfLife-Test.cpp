@@ -413,6 +413,19 @@ SCENARIO("Testing that the class Cell works as it should") {
                                 THEN("The cell should not be a rim cell") {
                                     REQUIRE_FALSE(cell.isRimCell());
                                 }
+                                AND_WHEN("Finally killing the cell") {
+                                    cell.setNextGenerationAction(KILL_CELL);
+                                    cell.updateState();
+                                    THEN("The cells age should have been reset") {
+                                        REQUIRE(cell.getAge() == 0);
+                                    }
+                                    THEN("The cell should not be a rim cell") {
+                                        REQUIRE_FALSE(cell.isRimCell());
+                                    }
+                                    THEN("The next action should be reset") {
+                                        REQUIRE(cell.getNextGenerationAction() == DO_NOTHING);
+                                    }
+                                }
                             }
                         }
                     }

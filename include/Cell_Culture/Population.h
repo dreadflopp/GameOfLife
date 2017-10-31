@@ -72,6 +72,7 @@ public:
      *  @brief Returns reference to cell specified by position
      *  @param position Represents coordinates in map with cells
      *  @return Cell at specified position
+     *  @test that cell from correct position is returned
      */
     Cell& getCellAtPosition(Point position) { return cells.at(position); }
 
@@ -82,6 +83,9 @@ public:
      *  @test after Population object first has been created, require return value == 0
      */
     int getTotalCellPopulation() { return cells.size(); }
+
+    string getEvenRuleName() {return evenRuleOfExistence->getRuleName();}
+    string getOddRuleName() {return oddRuleOfExistence->getRuleName();}
 
 };
 

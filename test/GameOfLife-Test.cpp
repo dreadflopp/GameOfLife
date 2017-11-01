@@ -23,7 +23,7 @@
 
 /*
  * TESTING class RuleOfExistance_Erik
- *//*
+ */
 SCENARIO("Testing that Eriks rules are applied"){
     GIVEN("MainArgumentsParser object") {
         MainArgumentsParser parser;
@@ -75,7 +75,7 @@ SCENARIO("Testing that Eriks rules are applied"){
             }
         }
     }
-}*/
+}
 
 /*
  * TESTING class Population

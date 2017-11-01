@@ -81,7 +81,7 @@ SCENARIO("Testing that Eriks rules are applied"){
  * TESTING class Population
  */
 SCENARIO("Testing a Population object") {
-    GIVEN("A Population object") {
+    GIVEN("An empty Population object") {
         Population myPopulation;
         WHEN("Population object is created") {
             THEN("Population should be empty") {
@@ -121,9 +121,8 @@ SCENARIO("Testing a Population object") {
         }
     }
 }
-/* UNFINISHED TEST
 SCENARIO("Testing that if Population is read from file, stored cells in Population are a copy of the cell structure in the file"){
-    GIVEN("Population created from file and a local copy for cell comparison"){
+    GIVEN("Population created from file and a local copy saved in vector for cell comparison"){
         fileName = "Population_Seed.txt";
         Population myPopulation;
         myPopulation.initiatePopulation("erik", "von_neumann");
@@ -152,9 +151,38 @@ SCENARIO("Testing that if Population is read from file, stored cells in Populati
             }
         }
         inFile.close();
+
+        int pos_in_vec = 0;
+        char c;
+        THEN("Values in population should be a replica of values in vector"){
+            for(int row = 1; row < height + 1; row++){
+                for(int column = 1; column < width + 1; column++)
+                {
+                    c = testCells[pos_in_vec];
+                    WHEN("Value in vector is '0'") {
+                        THEN("cell in corresponding place in Population should NOT be alive") {
+                            if (c == '0') {
+                                REQUIRE_FALSE(myPopulation.getCellAtPosition(Point{row, column}).isAlive());
+                            }
+                        }
+                    }
+                    WHEN("Value in vector is '1'") {
+                        THEN("cell in corresponding place in Population should be alive") {
+                            if (c == '1') {
+                                REQUIRE(myPopulation.getCellAtPosition(Point{row, column}).isAlive());
+                            }
+                        }
+                    }
+                    pos_in_vec++;
+                }
+            }
+        }
     }
+    //RESET globals
+    WORLD_DIMENSIONS.WIDTH = 80;
+    WORLD_DIMENSIONS.HEIGHT = 24;
+    fileName.clear();
 }
-*/
 /*
  * TESTING class MainArgumentsParser
  */

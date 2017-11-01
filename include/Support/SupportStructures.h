@@ -27,6 +27,11 @@ struct Point {
             return y < other.y;
         return x < other.x;
     }
+
+    // Overloading operator == for comparing Point objects
+    bool operator==(const Point& other) const {
+        return x==other.x && y==other.y;
+    }
 };
 
 /**

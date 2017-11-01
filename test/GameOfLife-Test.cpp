@@ -123,7 +123,7 @@ SCENARIO("Testing a Population object") {
 }
 SCENARIO("Testing that if Population is read from file, stored cells in Population are a copy of the cell structure in the file"){
     GIVEN("Population created from file and a local copy saved in vector for cell comparison"){
-        fileName = "Population_Seed.txt";
+        fileName = "../Population_Seed.txt";
         Population myPopulation;
         myPopulation.initiatePopulation("erik", "von_neumann");
 

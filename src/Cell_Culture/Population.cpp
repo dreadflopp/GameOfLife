@@ -89,3 +89,26 @@ int Population::calculateNewGeneration() {
     }
     return ++generation;
 }
+
+void Population::initiateTestPopulation(map<Point, Cell> newPopulation, string evenRuleName, string oddRuleName)
+{
+    // Set cells to new population
+    cells = std::move(newPopulation);
+
+    // the rim
+    for (int row = 0; row <= WORLD_DIMENSIONS.HEIGHT + 1; row++) {
+        for (int column = 0; column <= WORLD_DIMENSIONS.WIDTH + 1; column++) {
+            // if cell is a rim cell
+            if (column == 0 || row == 0 || column == WORLD_DIMENSIONS.WIDTH + 1 ||
+                row == WORLD_DIMENSIONS.HEIGHT + 1) {
+
+                cells[Point{column, row}] = Cell(true); // create a cell with rimCell state set to true
+            }
+        }
+    }
+    // create the rules we will use, based on specified rule names
+    if (oddRuleName.empty())	// if empty, same as even rule
+        oddRuleName = evenRuleName;
+    this->evenRuleOfExistence = RuleFactory::getInstance().createAndReturnRule(cells, evenRuleName);
+    this->oddRuleOfExistence = RuleFactory::getInstance().createAndReturnRule(cells, oddRuleName);
+}

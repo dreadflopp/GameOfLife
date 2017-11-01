@@ -29,7 +29,7 @@ SCENARIO("Testing that Eriks rules are applied"){
         MainArgumentsParser parser;
 
         WHEN("Given Eriks rules as rules parameter"){
-            char *argv[] = {"GameOfLife" ,"-er", "erik"};
+            char *argv[] = {const_cast<char*>("GameOfLife") ,const_cast<char*>("-er"), const_cast<char*>("erik")};
             int argc = 3;
             ApplicationValues appValues = parser.runParser(argv, argc);
             GameOfLife gameOfLife = GameOfLife(appValues.maxGenerations, appValues.evenRuleName, appValues.oddRuleName);
@@ -191,11 +191,11 @@ SCENARIO("Testing MainArgumentsParser with default values") {
         MainArgumentsParser parser;
 
         WHEN("Given no input values"){
-            char *argv[] = {"GameOfLife"};
+            char *argv[] = {const_cast<char*>("GameOfLife")};
             int argc = 1;
             ApplicationValues appValues = parser.runParser(argv, argc);
             THEN("runSimulation should be true") {
-                REQUIRE(appValues.runSimulation == true);
+                REQUIRE(appValues.runSimulation);
                 AND_THEN("maxGenerations should be set to default '100'") {
                     REQUIRE(appValues.maxGenerations == 100);
                 }
@@ -218,11 +218,11 @@ SCENARIO("Testing MainArgumentsParser with all possible parameters"){
         MainArgumentsParser parser;
 
         WHEN("Given valid set of input values to set WORLD_DIMENSIONS, evenRuleName, oddRuleName, generations, filename") {
-            char *argv[] = {"GameOfLife", "-s", "160x24", "-er", "erik", "-or", "von_neumann", "-g", "500", "-f", "population.txt"};
+            char *argv[] = {const_cast<char*>("GameOfLife"), const_cast<char*>("-s"), const_cast<char*>("160x24"), const_cast<char*>("-er"), const_cast<char*>("erik"), const_cast<char*>("-or"), const_cast<char*>("von_neumann"), const_cast<char*>("-g"), const_cast<char*>("500"), const_cast<char*>("-f"), const_cast<char*>("population.txt")};
             int argc = 11;
             ApplicationValues appValues = parser.runParser(argv, argc);
             THEN("runSimulation should be true") {
-                REQUIRE(appValues.runSimulation == true);
+                REQUIRE(appValues.runSimulation);
                 AND_THEN("MaxGenerations should be set to '500'") {
                     REQUIRE(appValues.maxGenerations == 500);
                 }
@@ -249,11 +249,11 @@ SCENARIO("Testing MainArgumentsParser with missing value") {
         MainArgumentsParser parser;
 
         WHEN("Given indicator '-g' to set generations but no value"){
-            char *argv[] = {"GameOfLife", "-g"};
+            char *argv[] = {const_cast<char*>("GameOfLife"), const_cast<char*>("-g")};
             int argc = 2;
             ApplicationValues appValues = parser.runParser(argv, argc);
             THEN("simulation should close") {
-                REQUIRE(appValues.runSimulation == false);
+                REQUIRE_FALSE(appValues.runSimulation);
             }
         }
     }

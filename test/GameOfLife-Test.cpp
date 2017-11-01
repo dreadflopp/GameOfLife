@@ -23,7 +23,7 @@
 
 /*
  * TESTING class RuleOfExistance_Erik
- */
+ *//*
 SCENARIO("Testing that Eriks rules are applied"){
     GIVEN("MainArgumentsParser object") {
         MainArgumentsParser parser;
@@ -75,7 +75,7 @@ SCENARIO("Testing that Eriks rules are applied"){
             }
         }
     }
-}
+}*/
 
 /*
  * TESTING class Population
@@ -620,6 +620,64 @@ SCENARIO("Testing that a missing file throws an error") {
             fileName = prettyRandom;
             THEN("Loading the file should throw an error") {
                 REQUIRE_THROWS(fileLoader.loadPopulationFromFile(cells));
+            }
+        }
+    }
+}
+
+SCENARIO("Testing RuleOfExistance_Conway") {
+    GIVEN("A cell culture") {
+
+        // the world
+        WORLD_DIMENSIONS.HEIGHT = 3;
+        WORLD_DIMENSIONS.WIDTH = 3;
+
+        // the cells
+        map<Point, Cell> cellMap;
+        Population cells;
+        /*
+         * The cell structure:
+         * 0123
+         * -----0
+         * |101|1
+         * |000|2
+         * |100|3
+         * -------
+         */
+        cellMap[Point{1, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{1, 2}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{1, 3}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 1}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{2, 2}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{2, 3}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{3, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 2}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{3, 3}] = Cell(false, IGNORE_CELL);
+
+        cells.initiateTestPopulation(cellMap, "conway", "conway");
+        cells.calculateNewGeneration();
+        WHEN("A new generation is calculated to check if cells with 3 neighbours are resurrected") {
+            cells.calculateNewGeneration();
+            THEN("The cell structure should update and resurrect the correct cells") {
+                /*
+                 * The cell structure should look like this:
+                 * 0123
+                 * -----0
+                 * |000|1
+                 * |010|2
+                 * |000|3
+                 * -------
+                 */
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
             }
         }
     }

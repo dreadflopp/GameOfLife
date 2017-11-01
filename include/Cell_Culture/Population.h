@@ -27,15 +27,15 @@ using namespace std;
  * Population's main responsibility during execution is determining which rule to apply for each new generation
  * and updating the cells to their new states.
  */
-class Population
-{
+class Population {
 private:
     int generation;
     map<Point, Cell> cells;
-    RuleOfExistence* evenRuleOfExistence;
-    RuleOfExistence* oddRuleOfExistence;
+    RuleOfExistence *evenRuleOfExistence;
+    RuleOfExistence *oddRuleOfExistence;
 
     void randomizeCellCulture();
+
     void buildCellCultureFromFile();
 
 public:
@@ -74,7 +74,7 @@ public:
      *  @return Cell at specified position
      *  @test that cell from correct position is returned
      */
-    Cell& getCellAtPosition(Point position) { return cells.at(position); }
+    Cell &getCellAtPosition(Point position) { return cells.at(position); }
 
     /**
      *  @brief Returns total number of cells in population
@@ -88,19 +88,26 @@ public:
      * @brief Gets rulename for even numbered generations. Function added for helt with testing.
      * @return rulename for every even numbered generation
      */
-    string getEvenRuleName() const {return evenRuleOfExistence->getRuleName();}
+    string getEvenRuleName() const { return evenRuleOfExistence->getRuleName(); }
 
     /**
      * @brief Gets rulename for odd numbered generations. Function added for helt with testing.
      * @return rulename for every odd numbered generation
      */
-    string getOddRuleName() const {return oddRuleOfExistence->getRuleName();}
+    string getOddRuleName() const { return oddRuleOfExistence->getRuleName(); }
 
     /**
-     * @brief Return copy of cells. Function added for helt with testing.
+     * @brief Return copy of cells. Function added for help with testing.
      * @return cells representing entire society of cells
      */
-    map<Point, Cell> getCells() const {return cells;};
+    map<Point, Cell> getCells() const { return cells; }
+
+    /**
+     * @brief initiates a population for testing
+     * @details the initiated population is not fully functional
+     * @param newPopulation
+     */
+        void initiateTestPopulation(map<Point, Cell> newPopulation, string evenRuleName, string oddRuleName);
 
 };
 

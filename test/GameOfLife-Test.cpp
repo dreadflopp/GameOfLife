@@ -138,7 +138,7 @@ SCENARIO("Testing that if Population is read from file, stored cells in Populati
         iss >> height;
         iss.clear();
 
-        vector<char> testCells;
+        vector<int> testCells;
 
         for (int row = 0; row < height; row++) {
             string populationRow;
@@ -153,22 +153,22 @@ SCENARIO("Testing that if Population is read from file, stored cells in Populati
         inFile.close();
 
         int pos_in_vec = 0;
-        char c;
+        int testValue;
         THEN("Values in population should be a replica of values in vector"){
             for(int row = 1; row < height + 1; row++){
                 for(int column = 1; column < width + 1; column++)
                 {
-                    c = testCells[pos_in_vec];
+                    testValue = testCells[pos_in_vec];
                     WHEN("Value in vector is '0'") {
                         THEN("cell in corresponding place in Population should NOT be alive") {
-                            if (c == '0') {
+                            if (testValue == 0) {
                                 REQUIRE_FALSE(myPopulation.getCellAtPosition(Point{row, column}).isAlive());
                             }
                         }
                     }
                     WHEN("Value in vector is '1'") {
                         THEN("cell in corresponding place in Population should be alive") {
-                            if (c == '1') {
+                            if (testValue == 1) {
                                 REQUIRE(myPopulation.getCellAtPosition(Point{row, column}).isAlive());
                             }
                         }

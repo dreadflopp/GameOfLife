@@ -41,6 +41,7 @@ private:
         COLOR color;
         bool rimCell;
         char value;
+
     } details;
 
     struct NextUpdate {		// encapsulate changes to next state
@@ -48,6 +49,7 @@ private:
         COLOR nextColor;
         char nextValue;
         bool willBeAlive;	// some rules may need to know beforehand whether the cell will be alive
+
     } nextUpdate;
 
 
@@ -178,6 +180,18 @@ public:
      * @return the value the cell will have in the next generation
      */
     char getNextCellValue() const { return nextUpdate.nextValue; }
+
+    /**
+     * @brief Overloading operator == for comparing Cell objects
+     * @return true if the cells on both sides of the operator == are equal
+     */
+    bool operator==(const Cell& other) const {
+        return details.rimCell == other.details.rimCell && details.age == other.details.age &&
+               details.value == other.details.value && details.color == other.details.color &&
+               nextUpdate.nextValue == other.nextUpdate.nextValue &&
+               nextUpdate.nextColor == other.nextUpdate.nextColor &&
+               nextUpdate.nextGenerationAction == other.nextUpdate.nextGenerationAction;
+    }
 };
 
 #endif

@@ -235,7 +235,7 @@ SCENARIO("Testing MainArgumentsParser with missing value") {
  * Testing the struct Point
  */
 SCENARIO ("Testing the overloading of operator < in the struct Point") {
-    GIVEN("Two points") {
+    GIVEN("Two random points") {
         std::default_random_engine generator(static_cast<unsigned>(time(0)));
         std::uniform_int_distribution<int> random(1, 1000);
         int ax = random(generator);
@@ -247,16 +247,20 @@ SCENARIO ("Testing the overloading of operator < in the struct Point") {
         Point b = {bx, by};
 
         WHEN("The x value of point a is less than the x value of point b") {
-            if (ax < bx)
+            if (ax < bx) {
                 THEN("point a should be less than point b") {
                     REQUIRE(a < b);
+                    REQUIRE_FALSE(a == b);
                 }
+            }
         }
         WHEN("The x value of point a is more than the x value of point b") {
-            if (ax > bx)
+            if (ax > bx) {
                 THEN("point b should be less than point a") {
                     REQUIRE(b < a);
+                    REQUIRE_FALSE(a == b);
                 }
+            }
         }
         WHEN("The x value of point a is equal to the x value of point b") {
             if (ax == bx) {
@@ -264,6 +268,7 @@ SCENARIO ("Testing the overloading of operator < in the struct Point") {
                     if (ay < by) {
                         THEN("point a should be less than point b") {
                             REQUIRE(a < b);
+                            REQUIRE_FALSE(a == b);
                         }
                     }
                 }
@@ -274,7 +279,26 @@ SCENARIO ("Testing the overloading of operator < in the struct Point") {
                         }
                     }
                 }
+                AND_WHEN("The y value of point a is equal to the y value of point b") {
+                    if ( ay == by) {
+                        THEN("The point should be equal") {
+                            REQUIRE(a == b);
+                        }
+                    }
+                }
             }
+        }
+    }
+    GIVEN("Two equal points") {
+        std::default_random_engine generator(static_cast<unsigned>(time(0)));
+        std::uniform_int_distribution<int> random(1, 1000);
+        int ax = random(generator);
+        int ay = random(generator);
+
+        Point a = {ax, ay};
+        Point b = {ax, ay};
+        THEN("The point should be equal") {
+            REQUIRE( a == b);
         }
     }
 }
@@ -464,7 +488,6 @@ SCENARIO("Testing OddRuleArgument") {
 /*
  * Tests for Cell
  */
-
 SCENARIO("Testing that the class Cell works as it should") {
     GIVEN("A dead cell that is not a rim cell") {
         Cell cell;
@@ -603,7 +626,52 @@ SCENARIO("Testing that the class Cell works as it should") {
             }
         }
     }
+    GIVEN("Two random Cells and a third one equal to the second") {
+        std::default_random_engine generator(static_cast<unsigned>(time(0)));
+        std::uniform_int_distribution<int> random(0, 99999);
+        std::uniform_int_distribution<int> random_char(33, 126);
+
+        ACTION actionFirst = static_cast<ACTION>(random(generator)%5);
+        bool isRimCellFirst = static_cast<bool>(random(generator)%2);
+        COLOR colorFirst = static_cast<COLOR>(random(generator)%8);
+        char valueFirst = static_cast<char>(random_char(generator));
+        Cell cellFirst(isRimCellFirst, actionFirst);
+        cellFirst.setNextCellValue(valueFirst);
+        cellFirst.setNextColor(colorFirst);
+
+        ACTION actionSecond = static_cast<ACTION>(random(generator)%5);
+        bool isRimCellSecond = static_cast<bool>(random(generator)%2);
+        COLOR colorSecond = static_cast<COLOR>(random(generator)%8);
+        char valueSecond = static_cast<char>(random_char(generator));
+        Cell cellSecond(isRimCellSecond, actionSecond);
+        cellSecond.setNextCellValue(valueSecond);
+        cellSecond.setNextColor(colorSecond);
+        Cell cellThird(isRimCellSecond, actionSecond);
+        cellThird.setNextCellValue(valueSecond);
+        cellThird.setNextColor(colorSecond);
+
+        WHEN("All values are equal") {
+            if (actionFirst == actionSecond && isRimCellFirst == isRimCellSecond) {
+                THEN("The cells should be equal") {
+                    REQUIRE(cellFirst == cellSecond);
+                }
+            }
+            AND_WHEN("All values aren't equal") {
+                if (actionFirst != actionSecond || isRimCellFirst != isRimCellSecond) {
+                    THEN("The cells shouldn't be equal") {
+                        REQUIRE_FALSE(cellFirst == cellSecond);
+                    }
+                }
+            }
+        }
+        WHEN("All values are equal") {
+            THEN("The cells should be equal") {
+                REQUIRE(cellSecond == cellThird);
+            }
+        }
+    }
 }
+
 
 /*
  * Testing FileLoader
@@ -954,5 +1022,57 @@ SCENARIO("Testing RuleOfExistance_VonNeuman") {
             }
         }
 
+    }
+}
+
+/*
+ * Testing ScreenPrinter
+ */
+SCENARIO("Testing ScreenPrinter") {
+    GIVEN("A population") {
+        default_random_engine generator(static_cast<unsigned>(time(0)));
+        uniform_int_distribution<int> random_0_1(0, 1);
+        uniform_int_distribution<int> random_0_2(0, 2);
+
+        // allocate and map cells based on worldSize
+        map<Point, Cell> cellsMap;
+        WORLD_DIMENSIONS.HEIGHT = 20;
+        WORLD_DIMENSIONS.WIDTH = 20;
+
+        for (int row = 0; row <= WORLD_DIMENSIONS.HEIGHT + 1; row++) {
+
+            for (int column = 0; column <= WORLD_DIMENSIONS.WIDTH + 1; column++) {
+                // if cell is a rim cell
+                if (column == 0 || row == 0
+                    || column == WORLD_DIMENSIONS.WIDTH + 1
+                    || row == WORLD_DIMENSIONS.HEIGHT + 1) {
+
+                    cellsMap[Point{column, row}] = Cell(true); // create a cell with rimCell state set to true
+                }
+                else { // If cell is an ordinary cell
+                    if (random_0_1(generator)) { // Randomly pick alive/dead
+                        cellsMap[Point{column, row}] = Cell(false, GIVE_CELL_LIFE); // create a ordinary living cell
+                    }
+                    else {
+                        cellsMap[Point{column, row}] = Cell(false, IGNORE_CELL); // else create a ordinary dead cell
+                    }
+                }
+            }
+        }
+
+        // initiate the population
+        Population cells;
+        vector<string> rules = { "conway", "erik", "von_neumann"};
+        int rule1 = random_0_2(generator);
+        int rule2 = random_0_2(generator);
+        cells.initiateTestPopulation(cellsMap, rules.at(rule1), rules.at(rule2));
+        WHEN("Printing the population to the screen") {
+            ScreenPrinter screenPrinter = ScreenPrinter::getInstance();
+            screenPrinter.printBoard(cells);
+            THEN("The population should be unchanged") {
+                map<Point, Cell> newCellsMap = cells.getCells();
+                REQUIRE(newCellsMap == cellsMap);
+            }
+        }
     }
 }

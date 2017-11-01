@@ -625,9 +625,11 @@ SCENARIO("Testing that a missing file throws an error") {
     }
 }
 
+/*
+ * Testing RuleOfExistance_Conway
+ */
 SCENARIO("Testing RuleOfExistance_Conway") {
     GIVEN("A cell culture with no more than 3 neighbours to each cell") {
-        int a = 0;
         // the world
         WORLD_DIMENSIONS.HEIGHT = 3;
         WORLD_DIMENSIONS.WIDTH = 3;
@@ -781,6 +783,172 @@ SCENARIO("Testing RuleOfExistance_Conway") {
                     REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 3}).isAlive());
                     REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 1}).isAlive());
                     REQUIRE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+                }
+            }
+        }
+
+    }
+}
+
+/*
+ * Testing RuleOfExistance_VonNeuman
+ */
+SCENARIO("Testing RuleOfExistance_VonNeuman") {
+    GIVEN("A cell culture with no more than 3 neighbours to each cell") {
+        // the world
+        WORLD_DIMENSIONS.HEIGHT = 3;
+        WORLD_DIMENSIONS.WIDTH = 3;
+
+        // the cells
+        map<Point, Cell> cellMap;
+        Population cells;
+        /*
+         * The cell structure:
+         * 0123
+         * -----0
+         * |111|1
+         * |010|2
+         * |110|3
+         * -------
+         */
+        cellMap[Point{1, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{1, 2}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{1, 3}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 1}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{2, 2}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 3}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{3, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 2}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 3}] = Cell(false, IGNORE_CELL);
+
+        cells.initiateTestPopulation(cellMap, "von_neumann", "von_neumann");
+        cells.calculateNewGeneration();
+        WHEN("A new generation is calculated to check if cells with 3 neighbours are resurrected and that all cells with less than 3 neighbours are killed") {
+            cells.calculateNewGeneration();
+            THEN("The cell structure should update and resurrect and kill the correct cells") {
+                /*
+                 * The cell structure should look like this:
+                 * 0123
+                 * -----0
+                 * |010|1
+                 * |110|2
+                 * |010|3
+                 * -------
+                 */
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 3}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+            }
+            AND_WHEN("A new generation is calculated") {
+                cells.calculateNewGeneration();
+
+                THEN("The cell structure should update and resurrect and kill the correct cells") {
+                    /*
+                     * The cell structure should look like this:
+                     * 0123
+                     * -----0
+                     * |000|1
+                     * |010|2
+                     * |000|3
+                     * -------
+                     */
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 3}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+                }
+            }
+
+        }
+    }
+    GIVEN("A cell culture with living cells with more than 3 neighbours") {
+
+        // the world
+        WORLD_DIMENSIONS.HEIGHT = 3;
+        WORLD_DIMENSIONS.WIDTH = 3;
+
+        // the cells
+        map<Point, Cell> cellMap;
+        Population cells;
+        /*
+         * The cell structure:
+         * 0123
+         * -----0
+         * |011|1
+         * |111|2
+         * |110|3
+         * -------
+         */
+        cellMap[Point{1, 1}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{1, 2}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{1, 3}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 2}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 3}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 2}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 3}] = Cell(false, IGNORE_CELL);
+
+        cells.initiateTestPopulation(cellMap, "von_neumann", "von_neumann");
+        cells.calculateNewGeneration();
+        WHEN("A new generation is calculated to check if cells with 3 neighbours are resurrected, that all cells with less than 3 neighbours are killed and that cells with more than 4 neighbours are killed") {
+            cells.calculateNewGeneration();
+            THEN("The cell structure should update and resurrect and kill the correct cells") {
+                /*
+                 * The cell structure should look like this:
+                 * 0123
+                 * -----0
+                 * |011|1
+                 * |101|2
+                 * |110|3
+                 * -------
+                 */
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+            }
+            AND_WHEN("A new generation is calculated") {
+                cells.calculateNewGeneration();
+                THEN("The cell structure should update and resurrect and kill the correct cells") {
+                    /*
+                 * The cell structure should look like this:
+                 * 0123
+                 * -----0
+                 * |001|1
+                 * |000|2
+                 * |100|3
+                 * -------
+                 */
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 3}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 2}).isAlive());
                     REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
                 }
             }

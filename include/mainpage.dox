@@ -1,6 +1,14 @@
 /**
  * @mainpage Mattias & Andreas - project "Game Of Life"
  *
+ * The purpose of the project work was to create documentation for an already created implementation of the Game of Life
+ * simulator, and create tests for all its classes and functions.
+ *
+ * The development of the work follows the agile method 'Kanban' and has been planned and managed through a Trello Board.
+ *
+ * The branch strategy we have chosen to with for has been 'Feature Branch Workflow'.
+ *
+ * ABOUT GAME OF LIFE
  * Game of Life was invented in 1970 by mathematician John Conway and is an example of cellular automation. As in this
  * case, a 2-dimensional pattern is built up of cells. The classic implementation is that any cell can be in the state
  * on or off ie "lit" or "extinguished".

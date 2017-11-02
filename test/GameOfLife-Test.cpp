@@ -681,13 +681,15 @@ SCENARIO("Testing that the class Cell works as it should") {
         cellThird.setNextColor(colorSecond);
 
         WHEN("All values are equal") {
-            if (actionFirst == actionSecond && isRimCellFirst == isRimCellSecond) {
+            if (actionFirst == actionSecond && isRimCellFirst == isRimCellSecond && colorFirst == colorSecond &&
+                valueFirst == valueSecond) {
                 THEN("The cells should be equal") {
                     REQUIRE(cellFirst == cellSecond);
                 }
             }
             AND_WHEN("All values aren't equal") {
-                if (actionFirst != actionSecond || isRimCellFirst != isRimCellSecond) {
+                if (actionFirst != actionSecond || isRimCellFirst != isRimCellSecond || colorFirst != colorSecond ||
+                    valueFirst != valueSecond) {
                     THEN("The cells shouldn't be equal") {
                         REQUIRE_FALSE(cellFirst == cellSecond);
                     }

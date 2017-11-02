@@ -17,10 +17,9 @@
  * reading neighbors from the current generation and writing the new states of the cells to the memory block which
  * contains the next generation.
  *
- *  ****************************** GOOD TO KNOW! *******************************
- *  *   Make sure txt-files for loading predefined populations from are        *
- *  *   placed in same folder as exe-files.                                    *
- *  ****************************************************************************
+ * GOOD TO KNOW!
+ * Make sure txt-files for loading predefined populations from are
+ * placed in same folder as exe-files.
  *
  * @ref about_the_authors
  */

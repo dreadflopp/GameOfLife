@@ -11,18 +11,20 @@
 #include <Support/MainArguments.h>
 #include <Support/MainArgumentsParser.h>
 #include <Support/FileLoader.h>
-#include <Cell_Culture/Cell.h>
-#include <vector>
+
 #include "catch.hpp"
 #include "memstat.hpp"
-#include "GoL_Rules/RuleOfExistence.h"
 #include <fstream>
-#include <sstream>
-#include <iostream>
 #include <GameOfLife.h>
 
 /*
  * TESTING class RuleOfExistance_Erik
+ * Test is far from optimal since it might not test all rules. Test generates a full run of a simulation and might never
+ * generate a 'hit' on certain rules. Probability increases to get a 'hit' with more generations to iterate through, but
+ * downside is that the test takes longer time.
+ * When test is run, 100 generations(default) are iterated through. To change number of generations, add "-g" and "the number
+ * of generations" you wish to iterate through, and change argc to = 5.
+ * SUGGESTION: Create test based on the model for which Conway and Von Neumann is tested
  */
 SCENARIO("Testing that Eriks rules are applied"){
     GIVEN("MainArgumentsParser object") {

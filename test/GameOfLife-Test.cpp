@@ -378,19 +378,19 @@ SCENARIO("Before creating RuleFactory object") {
 }
 
 /*
- * Testing BaseArguments and its derived clases
+ * Testing BaseArguments and its derived classes
  */
 SCENARIO("Testing the class HelpArgument") {
     GIVEN("A HelpArgument object and an ApplicationValues struct where runSimulation is set to true") {
         HelpArgument helpArg;
         ApplicationValues appValues;
         appValues.runSimulation = true;
-        char* ch;
+        char* ch = const_cast<char *>("");
 
         WHEN("The class is executed") {
             helpArg.execute(appValues, ch);
             THEN("appValues.runSimulation should be false") {
-                REQUIRE(appValues.runSimulation == false);
+                REQUIRE_FALSE(appValues.runSimulation);
             }
         }
     }
@@ -406,10 +406,10 @@ SCENARIO("Testing GenerationsArgument") {
             char* generations=nullptr;
             genArg.execute(appValues, generations);
             THEN("appValues.runSimulation should be false") {
-                REQUIRE(appValues.runSimulation == false);
+                REQUIRE_FALSE(appValues.runSimulation);
             }
             AND_WHEN("the object is executed again with generations set to a value") {
-                generations = "97";
+                generations = const_cast<char *>("97");
                 genArg.execute(appValues, generations);
                 THEN("appValues.maxGenerations should be set") {
                     REQUIRE(appValues.maxGenerations == 97);
@@ -429,10 +429,10 @@ SCENARIO("Testing the class WorldSizeArgument") {
             char* dimensions=nullptr;
             worldArg.execute(appValues, dimensions);
             THEN("appValues.runSimulation should be false") {
-                REQUIRE(appValues.runSimulation == false);
+                REQUIRE_FALSE(appValues.runSimulation);
             }
             AND_WHEN("executing the with dimensions is set to a valid value") {
-                dimensions = "79x34";
+                dimensions = const_cast<char *>("79x34");
                 worldArg.execute(appValues, dimensions);
                 THEN("the WORLD_DIMENSIONS should be 79x34") {
 
@@ -454,10 +454,10 @@ SCENARIO("Testing FileArgument") {
             char* fileNameArg=nullptr;
             fileArg.execute(appValues, fileNameArg);
             THEN("appValues.runSimulation should be false") {
-                REQUIRE(appValues.runSimulation == false);
+                REQUIRE_FALSE(appValues.runSimulation);
             }
             AND_WHEN("the object is executed again with fileNameArg set to a value") {
-                fileNameArg = "testName";
+                fileNameArg = const_cast<char *>("testName");
                 fileArg.execute(appValues, fileNameArg);
                 THEN("the global variable FileName should be equal to fileNameArg") {
                     REQUIRE(fileName == fileNameArg);
@@ -477,10 +477,10 @@ SCENARIO("Testing EvenRuleArgument") {
             char* argument=nullptr;
             evenArg.execute(appValues, argument);
             THEN("appValues.runSimulation should be false") {
-                REQUIRE(appValues.runSimulation == false);
+                REQUIRE_FALSE(appValues.runSimulation);
             }
             AND_WHEN("the object is executed again with argument set to a value") {
-                argument = "testName";
+                argument = const_cast<char *>("testName");
                 evenArg.execute(appValues, argument);
                 THEN("appValues.evenRuleName  should be equal to argument") {
                     REQUIRE(appValues.evenRuleName == argument);
@@ -500,10 +500,10 @@ SCENARIO("Testing OddRuleArgument") {
             char* argument=nullptr;
             oddArg.execute(appValues, argument);
             THEN("appValues.runSimulation should be false") {
-                REQUIRE(appValues.runSimulation == false);
+                REQUIRE_FALSE(appValues.runSimulation);
             }
             AND_WHEN("the object is executed again with argument set to a value") {
-                argument = "testName";
+                argument = const_cast<char *>("testName");
                 oddArg.execute(appValues, argument);
                 THEN("appValues.evenRuleName  should be equal to argument") {
                     REQUIRE(appValues.oddRuleName == argument);

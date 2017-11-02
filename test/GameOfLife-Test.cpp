@@ -711,14 +711,25 @@ SCENARIO("Testing that a missing file throws an error") {
         WHEN("The file doesn't exist") {
             // Pretty random string
             std::string prettyRandom = "olauhgfal£@$€ouirhjfgliSDRjhp3wsdf29845u6tp";
-            std::random_shuffle(prettyRandom.begin(), prettyRandom.end());
+            std::shuffle(prettyRandom.begin(), prettyRandom.end(), std::mt19937(std::random_device()()));
 
             fileName = prettyRandom;
             THEN("Loading the file should throw an error") {
                 REQUIRE_THROWS(fileLoader.loadPopulationFromFile(cells));
             }
         }
+        WHEN("The file does exist") {
+            fileName = "../Population_Seed.txt";
+            THEN("Loading the file should not throw an error") {
+                REQUIRE_NOTHROW(fileLoader.loadPopulationFromFile(cells));
+            }
+        }
     }
+
+    //RESET globals
+    WORLD_DIMENSIONS.WIDTH = 80;
+    WORLD_DIMENSIONS.HEIGHT = 24;
+    fileName.clear();
 }
 
 /*

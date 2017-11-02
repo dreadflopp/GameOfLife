@@ -20,58 +20,6 @@
 /*
  * TESTING class RuleOfExistance_Erik
  */
-SCENARIO("Testing that Eriks rules are applied"){
-    GIVEN("MainArgumentsParser object") {
-        MainArgumentsParser parser;
-
-        WHEN("Given Eriks rules as rules parameter"){
-            char *argv[] = {const_cast<char*>("GameOfLife") ,const_cast<char*>("-er"), const_cast<char*>("erik")};
-            int argc = 3;
-            ApplicationValues appValues = parser.runParser(argv, argc);
-            GameOfLife gameOfLife = GameOfLife(appValues.maxGenerations, appValues.evenRuleName, appValues.oddRuleName);
-            map<Point, Cell> testCells;
-
-            AND_WHEN("New round of simulation is calculated") {
-                while (gameOfLife.getPopulation().calculateNewGeneration() < gameOfLife.getNrOfGenerations()) {
-                    int oldest = 0;
-                    Cell primeElder;
-                    primeElder.setNextColor(STATE_COLORS.OLD);
-
-                    testCells = gameOfLife.getPopulation().getCells();
-                    for (auto it = testCells.begin(); it != testCells.end(); it++) {
-                        Cell cell = it->second;
-
-                        if (cell.getAge() > 4 && cell.getNextGenerationAction() != KILL_CELL) {
-                            THEN("cells older than 4 should get color 'OLD'") {
-                                    REQUIRE(cell.getNextColor() == STATE_COLORS.OLD);
-                                }
-                            }
-                        if (cell.getAge() > 9 && cell.getNextGenerationAction() != KILL_CELL) {
-                            THEN("cells older than 9 should get cell value 'E'") {
-                                    REQUIRE(cell.getNextCellValue() == 'E');
-                                }
-                            }
-                        if(cell.getAge() > oldest && cell.getAge() > 9 && cell.getNextGenerationAction() != KILL_CELL){
-                            THEN("the previous prime elder's color should be set to 'OLD'"){
-                                REQUIRE(primeElder.getNextColor() == STATE_COLORS.OLD);
-                            }
-                            oldest = cell.getAge();
-                            THEN("the oldest cell with minimum age 10 should get color 'ELDER'") {
-                                REQUIRE(cell.getNextColor() == STATE_COLORS.ELDER);
-                            }
-                            primeElder = &cell;
-                        }
-                        if (cell.getAge() > 5 && cell.getNextGenerationAction() == KILL_CELL) {
-                            THEN("cells older than 5 that dies should reset cell value to '#'") {
-                                REQUIRE(cell.getNextCellValue() == '#');
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}*/
 SCENARIO("Testing RuleOfExistance_Erik") {
     GIVEN("A cell culture with no more than 3 neighbours to each cell") {
         // the world

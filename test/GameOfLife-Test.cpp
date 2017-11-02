@@ -19,66 +19,291 @@
 
 /*
  * TESTING class RuleOfExistance_Erik
- * Test is far from optimal since it might not test all rules. Test generates a full run of a simulation and might never
- * generate a 'hit' on certain rules. Probability increases to get a 'hit' with more generations to iterate through, but
- * downside is that the test takes longer time.
- * When test is run, 100 generations(default) are iterated through. To change number of generations, add "-g" and "the number
- * of generations" you wish to iterate through, and change argc to = 5.
- * SUGGESTION: Create test based on the model for which Conway and Von Neumann is tested
  */
-SCENARIO("Testing that Eriks rules are applied"){
-    GIVEN("MainArgumentsParser object") {
-        MainArgumentsParser parser;
+SCENARIO("Testing RuleOfExistance_Erik") {
+    GIVEN("A cell culture with no more than 3 neighbours to each cell") {
+        // the world
+        WORLD_DIMENSIONS.HEIGHT = 3;
+        WORLD_DIMENSIONS.WIDTH = 3;
 
-        WHEN("Given Eriks rules as rules parameter"){
-            char *argv[] = {const_cast<char*>("GameOfLife") ,const_cast<char*>("-er"), const_cast<char*>("erik")};
-            int argc = 3;
-            ApplicationValues appValues = parser.runParser(argv, argc);
-            GameOfLife gameOfLife = GameOfLife(appValues.maxGenerations, appValues.evenRuleName, appValues.oddRuleName);
-            map<Point, Cell> testCells;
+        // the cells
+        map<Point, Cell> cellMap;
+        Population cells;
+        /*
+         * The cell structure:
+         * 0123
+         * -----0
+         * |#0#|1
+         * |000|2
+         * |#00|3
+         * -------
+         */
+        cellMap[Point{1, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{1, 2}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{1, 3}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 1}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{2, 2}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{2, 3}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{3, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 2}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{3, 3}] = Cell(false, IGNORE_CELL);
 
-            AND_WHEN("New round of simulation is calculated") {
-                while (gameOfLife.getPopulation().calculateNewGeneration() < gameOfLife.getNrOfGenerations()) {
-                    int oldest = 0;
-                    Cell primeElder;
-                    primeElder.setNextColor(STATE_COLORS.OLD);
+        cells.initiateTestPopulation(cellMap, "erik", "erik");
+        cells.calculateNewGeneration();
 
-                    testCells = gameOfLife.getPopulation().getCells();
-                    for (auto it = testCells.begin(); it != testCells.end(); it++) {
-                        Cell cell = it->second;
+        // Age some cells
 
-                        if (cell.getAge() > 4 && cell.getNextGenerationAction() != KILL_CELL) {
-                            THEN("cells older than 4 should get color 'OLD'") {
-                                    REQUIRE(cell.getNextColor() == STATE_COLORS.OLD);
-                                }
-                            }
-                        if (cell.getAge() > 9 && cell.getNextGenerationAction() != KILL_CELL) {
-                            THEN("cells older than 9 should get cell value 'E'") {
-                                    REQUIRE(cell.getNextCellValue() == 'E');
-                                }
-                            }
-                        if(cell.getAge() > oldest && cell.getAge() > 9 && cell.getNextGenerationAction() != KILL_CELL){
-                            THEN("the previous prime elder's color should be set to 'OLD'"){
-                                REQUIRE(primeElder.getNextColor() == STATE_COLORS.OLD);
-                            }
-                            oldest = cell.getAge();
-                            THEN("the oldest cell with minimum age 10 should get color 'ELDER'") {
-                                REQUIRE(cell.getNextColor() == STATE_COLORS.ELDER);
-                            }
-                            primeElder = &cell;
-                        }
-                        if (cell.getAge() > 5 && cell.getNextGenerationAction() == KILL_CELL) {
-                            THEN("cells older than 5 that dies should reset cell value to '#'") {
-                                REQUIRE(cell.getNextCellValue() == '#');
-                            }
-                        }
-                    }
+
+        WHEN("A new generation is calculated to check if cells with 3 neighbours are resurrected and that all cells with less than 3 neighbours are killed") {
+            cells.calculateNewGeneration();
+            THEN("The cell structure should update and resurrect and kill the correct cells") {
+                /*
+                 * The cell structure should look like this:
+                 * 0123
+                 * -----0
+                 * |000|1
+                 * |0#0|2
+                 * |000|3
+                 * -------
+                 */
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 1}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{1, 1}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 2}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{1, 2}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 3}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{1, 3}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 1}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{2, 1}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 2}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{2, 2}).getColor() == STATE_COLORS.LIVING);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 3}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{2, 3}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 1}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{3, 1}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 2}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{3, 2}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 3}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{3, 3}).getColor() == STATE_COLORS.DEAD);
+            }
+            AND_WHEN("A new generation is calculated") {
+                cells.calculateNewGeneration();
+
+                THEN("The cell structure should update and resurrect and kill the correct cells") {
+                    /*
+                     * The cell structure should look like this:
+                     * 0123
+                     * -----0
+                     * |000|1
+                     * |000|2
+                     * |000|3
+                     * -------
+                     */
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{1, 1}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{1, 1}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{1, 2}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{1, 2}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{1, 3}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{1, 3}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{2, 1}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{2, 1}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{2, 2}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{2, 2}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 3}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{2, 3}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{2, 3}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{3, 1}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{3, 1}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{3, 2}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{3, 2}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{3, 3}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{3, 3}).getColor() == STATE_COLORS.DEAD);
+                }
+            }
+
+        }
+    }
+    GIVEN("A cell culture with living cells with more than 3 neighbours") {
+
+        // the world
+        WORLD_DIMENSIONS.HEIGHT = 3;
+        WORLD_DIMENSIONS.WIDTH = 3;
+
+        // the cells
+        map<Point, Cell> cellMap;
+        Population cells;
+        /*
+         * The cell structure:
+         * 0123
+         * -----0
+         * |#0#|1
+         * |##0|2
+         * |##0|3
+         * -------
+         */
+        cellMap[Point{1, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{1, 2}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{1, 3}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 2}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{2, 3}] = Cell(false, IGNORE_CELL);
+        cellMap[Point{3, 1}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 2}] = Cell(false, GIVE_CELL_LIFE);
+        cellMap[Point{3, 3}] = Cell(false, IGNORE_CELL);
+
+        // Age cell {1, 1}
+        for(int i = 0; i < 10; i++) {
+            cellMap.at(Point{1, 1}).updateState();
+            cellMap.at(Point{1, 1}).setNextGenerationAction(IGNORE_CELL);
+        }
+
+        // Age cell {3, 1}
+        for(int i = 0; i < 9; i++) {
+            cellMap.at(Point{3, 1}).updateState();
+            cellMap.at(Point{3, 1}).setNextGenerationAction(IGNORE_CELL);
+        }
+
+        cells.initiateTestPopulation(cellMap, "erik", "erik");
+        cells.calculateNewGeneration();
+        WHEN("A new generation is calculated to check if cells with 3 neighbours are resurrected, that all cells with less than 3 neighbours are killed and that cells with more than 4 neighbours are killed and that colors are changed and and elders are created as they should") {
+            cells.calculateNewGeneration();
+            THEN("The cell structure should update and resurrect and kill the correct cells") {
+                /*
+                 * The cell structure should look like this:
+                 * 0123
+                 * -----0
+                 * |#00|1
+                 * |00#|2
+                 * |##0|3
+                 * -------
+                 */
+
+                REQUIRE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 1}).getCellValue() == 'E');
+                REQUIRE(cells.getCellAtPosition(Point{1, 1}).getColor() == STATE_COLORS.ELDER);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 2}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{1, 2}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{1, 3}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{1, 3}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 1}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{2, 1}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 2}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{2, 2}).getColor() == STATE_COLORS.DEAD);
+
+                REQUIRE(cells.getCellAtPosition(Point{2, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{2, 3}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{2, 3}).getColor() == STATE_COLORS.LIVING);
+
+                REQUIRE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 1}).getCellValue() == 'E');
+                REQUIRE(cells.getCellAtPosition(Point{3, 1}).getColor() == STATE_COLORS.OLD);
+
+                REQUIRE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 2}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{3, 2}).getColor() == STATE_COLORS.LIVING);
+
+                REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+                REQUIRE(cells.getCellAtPosition(Point{3, 3}).getCellValue() == '#');
+                REQUIRE(cells.getCellAtPosition(Point{3, 3}).getColor() == STATE_COLORS.DEAD);
+         }
+            AND_WHEN("A new generation is calculated") {
+                cells.calculateNewGeneration();
+                THEN("The cell structure should update and resurrect and kill the correct cells") {
+                    /*
+                 * The cell structure should look like this:
+                 * 0123
+                 * -----0
+                 * |000|1
+                 * |#00|2
+                 * |0#0|3
+                 * -------
+                 */
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 1}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{1, 1}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{1, 1}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 2}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{1, 2}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{1, 2}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{1, 3}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{1, 3}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{1, 3}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE(cells.getCellAtPosition(Point{2, 1}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{2, 1}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{2, 1}).getColor() == STATE_COLORS.LIVING);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 2}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{2, 2}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{2, 2}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{2, 3}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{2, 3}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{2, 3}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 1}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{3, 1}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{3, 1}).getColor() == STATE_COLORS.DEAD);
+
+                    REQUIRE(cells.getCellAtPosition(Point{3, 2}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{3, 2}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{3, 2}).getColor() == STATE_COLORS.LIVING);
+
+                    REQUIRE_FALSE(cells.getCellAtPosition(Point{3, 3}).isAlive());
+                    REQUIRE(cells.getCellAtPosition(Point{3, 3}).getCellValue() == '#');
+                    REQUIRE(cells.getCellAtPosition(Point{3, 3}).getColor() == STATE_COLORS.DEAD);
                 }
             }
         }
+
     }
 }
 
+/*
 /*
  * TESTING class Population
  */

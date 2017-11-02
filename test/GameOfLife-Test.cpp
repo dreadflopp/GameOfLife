@@ -590,7 +590,7 @@ SCENARIO("Testing that the class Cell works as it should") {
                             AND_WHEN("Setting the value of the cell and updating") {
                                 // Random char
                                 std::uniform_int_distribution<int> random_char(33, 126);
-                                char value = static_cast<char>(random_char(generator));
+                                auto value = static_cast<char>(random_char(generator));
 
                                 // Assign random char
                                 cell.setNextCellValue(value);
@@ -659,18 +659,18 @@ SCENARIO("Testing that the class Cell works as it should") {
         std::uniform_int_distribution<int> random(0, 99999);
         std::uniform_int_distribution<int> random_char(33, 126);
 
-        ACTION actionFirst = static_cast<ACTION>(random(generator)%5);
-        bool isRimCellFirst = static_cast<bool>(random(generator)%2);
-        COLOR colorFirst = static_cast<COLOR>(random(generator)%8);
-        char valueFirst = static_cast<char>(random_char(generator));
+        auto actionFirst = static_cast<ACTION>(random(generator)%5);
+        auto isRimCellFirst = static_cast<bool>(random(generator)%2);
+        auto colorFirst = static_cast<COLOR>(random(generator)%8);
+        auto valueFirst = static_cast<char>(random_char(generator));
         Cell cellFirst(isRimCellFirst, actionFirst);
         cellFirst.setNextCellValue(valueFirst);
         cellFirst.setNextColor(colorFirst);
 
-        ACTION actionSecond = static_cast<ACTION>(random(generator)%5);
-        bool isRimCellSecond = static_cast<bool>(random(generator)%2);
-        COLOR colorSecond = static_cast<COLOR>(random(generator)%8);
-        char valueSecond = static_cast<char>(random_char(generator));
+        auto actionSecond = static_cast<ACTION>(random(generator)%5);
+        auto isRimCellSecond = static_cast<bool>(random(generator)%2);
+        auto colorSecond = static_cast<COLOR>(random(generator)%8);
+        auto valueSecond = static_cast<char>(random_char(generator));
         Cell cellSecond(isRimCellSecond, actionSecond);
         cellSecond.setNextCellValue(valueSecond);
         cellSecond.setNextColor(colorSecond);

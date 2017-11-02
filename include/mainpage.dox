@@ -1,0 +1,32 @@
+/**
+ * @mainpage Mattias & Andreas - project "Game Of Life"
+ *
+ * Game of Life was invented in 1970 by mathematician John Conway and is an example of cellular automation. As in this
+ * case, a 2-dimensional pattern is built up of cells. The classic implementation is that any cell can be in the state
+ * on or off ie "lit" or "extinguished".
+ *
+ * The game starts in an initial state and continues by applying simple rules to take it to the next generation. The
+ * classical rules are:
+ * - A living cell that has fewer than two living neighbors dies of underpopulation
+ * - A living cell that has two to three living neighbors lives on to the next generation
+ * - A living cell that has more than three living neighbors dies of the overpopulation
+ * - A dead cell that has exactly three living neighbors begins to live (reproduction)
+ *
+ * Generating the next generation does not matter which order you apply the rules to. It is important, however, that
+ * you create the next generation in a separate memory space from the generation in which you go from. That is,
+ * reading neighbors from the current generation and writing the new states of the cells to the memory block which
+ * contains the next generation.
+ *
+ * @ref about_the_authors
+ */
+
+ /**
+ * @page about_the_authors This page presents the authors of the project
+ *
+ * @section Author1 Andreas Lind
+ * anli1606@student.miun.se
+ *
+ * @section Author2 Mattias Lindell
+ * mali1624@student.miun.se
+ *
+ */

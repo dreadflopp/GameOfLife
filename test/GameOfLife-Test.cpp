@@ -15,12 +15,11 @@
 #include "catch.hpp"
 #include "memstat.hpp"
 #include <fstream>
-#include <GameOfLife.h>
 
 /*
- * TESTING class RuleOfExistance_Erik
+ * TESTING class RuleOfExistence_Erik
  */
-SCENARIO("Testing RuleOfExistance_Erik") {
+SCENARIO("Testing RuleOfExistence_Erik") {
     GIVEN("A cell culture with no more than 3 neighbours to each cell") {
         // the world
         WORLD_DIMENSIONS.HEIGHT = 3;
@@ -326,15 +325,15 @@ SCENARIO("Testing a Population object") {
                 vector<string> allRules = {"conway", "erik", "von_neumann"};
 
                 string evenRuleName;
-                evenRuleName = allRules.at(random(generator) % 3);
+                evenRuleName = allRules.at(static_cast<unsigned long>(random(generator) % 3));
                 string oddRuleName;
-                oddRuleName = allRules.at(random(generator) % 3);
+                oddRuleName = allRules.at(static_cast<unsigned long>(random(generator) % 3));
                 myPopulation.initiatePopulation(evenRuleName, oddRuleName);
 
-                THEN("data member evenRuleOfExistance should be evenRuleName") {
+                THEN("data member evenRuleOfExistence should be evenRuleName") {
                     REQUIRE(myPopulation.getEvenRuleName() == evenRuleName);
                 }
-                THEN("data member oddRuleOfExistance should be oddRuleName") {
+                THEN("data member oddRuleOfExistence should be oddRuleName") {
                     REQUIRE(myPopulation.getOddRuleName() == oddRuleName);
                 }
                 THEN("Population should not be empty") {
@@ -569,7 +568,7 @@ SCENARIO ("Testing the overloading of operator < in the struct Point") {
  * TESTING class RuleFactory
  */
 SCENARIO("Before creating RuleFactory object") {
-    GIVEN("An empty RuleOfExistance object") {
+    GIVEN("An empty RuleOfExistence object") {
         RuleOfExistence *testRule(nullptr);
 
         THEN("No rule should exist"){
@@ -605,7 +604,7 @@ SCENARIO("Before creating RuleFactory object") {
                         }
                     }
                 }
-                delete testRule; //manually deallocate RuleOfExistance object since they are deallocated in Population-destructor in real simulation
+                delete testRule; //manually deallocate RuleOfExistence object since they are deallocated in Population-destructor in real simulation
             }
         }
     }
@@ -814,7 +813,7 @@ SCENARIO("Testing that the class Cell works as it should") {
                                                     STATE_COLORS.OLD};
 
                             // Assign random color
-                            COLOR nextColor = colors.at(random(generator));
+                            COLOR nextColor = colors.at(static_cast<unsigned long>(random(generator)));
                             cell.setNextColor(nextColor);
                             cell.updateState();
                             THEN("The color of the cell should be correctly set") {
@@ -974,9 +973,9 @@ SCENARIO("Testing that a missing file throws an error") {
 }
 
 /*
- * Testing RuleOfExistance_Conway
+ * Testing RuleOfExistence_Conway
  */
-SCENARIO("Testing RuleOfExistance_Conway") {
+SCENARIO("Testing RuleOfExistence_Conway") {
     GIVEN("A cell culture with no more than 3 neighbours to each cell") {
         // the world
         WORLD_DIMENSIONS.HEIGHT = 3;
@@ -1143,9 +1142,9 @@ SCENARIO("Testing RuleOfExistance_Conway") {
 }
 
 /*
- * Testing RuleOfExistance_VonNeuman
+ * Testing RuleOfExistence_VonNeuman
  */
-SCENARIO("Testing RuleOfExistance_VonNeuman") {
+SCENARIO("Testing RuleOfExistence_VonNeuman") {
     GIVEN("A cell culture with no more than 3 neighbours to each cell") {
         // the world
         WORLD_DIMENSIONS.HEIGHT = 3;
@@ -1349,8 +1348,8 @@ SCENARIO("Testing ScreenPrinter") {
         // initiate the population
         Population cells;
         vector<string> rules = { "conway", "erik", "von_neumann"};
-        int rule1 = random_0_2(generator);
-        int rule2 = random_0_2(generator);
+        unsigned long rule1 = random_0_2(generator);
+        unsigned long rule2 = random_0_2(generator);
         cells.initiateTestPopulation(cellsMap, rules.at(rule1), rules.at(rule2));
         WHEN("Printing the population to the screen") {
             ScreenPrinter screenPrinter = ScreenPrinter::getInstance();

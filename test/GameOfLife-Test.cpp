@@ -301,6 +301,9 @@ SCENARIO("Testing RuleOfExistance_Erik") {
         }
 
     }
+    //RESET globals
+    WORLD_DIMENSIONS.WIDTH = 80;
+    WORLD_DIMENSIONS.HEIGHT = 24;
 }
 
 /*
@@ -469,6 +472,10 @@ SCENARIO("Testing MainArgumentsParser with all possible parameters"){
             }
         }
     }
+    //RESET globals
+    WORLD_DIMENSIONS.WIDTH = 80;
+    WORLD_DIMENSIONS.HEIGHT = 24;
+    fileName.clear();
 }
 
 SCENARIO("Testing MainArgumentsParser with missing value") {
@@ -669,6 +676,9 @@ SCENARIO("Testing the class WorldSizeArgument") {
             }
         }
     }
+    //RESET globals
+    WORLD_DIMENSIONS.WIDTH = 80;
+    WORLD_DIMENSIONS.HEIGHT = 24;
 }
 
 SCENARIO("Testing FileArgument") {
@@ -692,6 +702,8 @@ SCENARIO("Testing FileArgument") {
             }
         }
     }
+    //RESET globals
+    fileName.clear();
 }
 
 SCENARIO("Testing EvenRuleArgument") {
@@ -1125,6 +1137,9 @@ SCENARIO("Testing RuleOfExistance_Conway") {
         }
 
     }
+    //RESET globals
+    WORLD_DIMENSIONS.WIDTH = 80;
+    WORLD_DIMENSIONS.HEIGHT = 24;
 }
 
 /*
@@ -1291,6 +1306,9 @@ SCENARIO("Testing RuleOfExistance_VonNeuman") {
         }
 
     }
+    //RESET globals
+    WORLD_DIMENSIONS.WIDTH = 80;
+    WORLD_DIMENSIONS.HEIGHT = 24;
 }
 
 /*
@@ -1343,4 +1361,7 @@ SCENARIO("Testing ScreenPrinter") {
             }
         }
     }
+    //RESET globals
+    WORLD_DIMENSIONS.WIDTH = 80;
+    WORLD_DIMENSIONS.HEIGHT = 24;
 }

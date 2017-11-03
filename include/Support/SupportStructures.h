@@ -4,7 +4,6 @@
  * @author Andreas Lind
  * @date October 2017
  * @version 0.1
- * @brief Various supportive structures to be used throughout the application!
  */
 
 #ifndef GAMEOFLIFE_SUPPORTSTRUCTURES_H

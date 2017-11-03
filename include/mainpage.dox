@@ -1,6 +1,14 @@
 /**
  * @mainpage Mattias & Andreas - project "Game Of Life"
  *
+ * The purpose of the project work was to create documentation for an already created implementation of the Game of Life
+ * simulator, and create tests for all its classes and functions.
+ *
+ * The development of the work follows the agile method <em>Kanban</em> and has been planned and managed through a <em>Trello Board</em>.
+ *
+ * The branch strategy we have chosen to work with for has been <em>Feature Branch Workflow</em>.
+ *
+ * <b>ABOUT GAME OF LIFE</b>\n
  * Game of Life was invented in 1970 by mathematician John Conway and is an example of cellular automation. As in this
  * case, a 2-dimensional pattern is built up of cells. The classic implementation is that any cell can be in the state
  * on or off ie "lit" or "extinguished".
@@ -17,11 +25,14 @@
  * reading neighbors from the current generation and writing the new states of the cells to the memory block which
  * contains the next generation.
  *
+ * <b>GOOD TO KNOW!</b>\n
+ * Make sure txt-files for loading predefined populations from are placed in same folder as exe-files.
+ *
  * @ref about_the_authors
  */
 
  /**
- * @page about_the_authors This page presents the authors of the project
+ * @page about_the_authors About Andreas & Mattias
  *
  * @section Author1 Andreas Lind
  * anli1606@student.miun.se
